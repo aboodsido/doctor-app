@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -54,7 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
       body: _isLoading
-          ? const CircularProgressIndicator()
+          ? const Center(child: CircularProgressIndicator())
           : Form(
               key: _formKey,
               child: SingleChildScrollView(
@@ -62,6 +59,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
+                      /*
                       GestureDetector(
                         onTap: _pickImage, // Trigger image picker when tapped
                         child: ClipRRect(
@@ -89,6 +87,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                         ),
                       ),
+                    */
                       SizedBox(
                         width: double.infinity,
                         child: Column(
@@ -98,6 +97,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               'Select User Type',
                               style: GoogleFonts.poppins(
                                   fontSize: 14, color: Colors.grey),
+                            ),
+                            const SizedBox(
+                              height: 10,
                             ),
                             Wrap(
                               spacing: 8.0, // Spacing between chips
@@ -139,9 +141,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ],
                         ),
                       ),
-                      const SizedBox(
-                        height: 16,
-                      ),
+                      const SizedBox(height: 16),
                       SizedBox(
                         height: 44,
                         child: TextFormField(
@@ -619,7 +619,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       SizedBox(
                         width: double.infinity, // Adjust width as needed
                         child: ElevatedButton(
-                          onPressed: (){},
+                          onPressed: _register,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(
                                 0xff0064FA), // Background color (blue)
@@ -649,21 +649,22 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
- Future<void> _pickImage() async {
-  try {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = pickedFile;
-      });
-    } else {
-      print('No image selected');
+/*
+  Future<void> _pickImage() async {
+    try {
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        setState(() {
+          _imageFile = pickedFile;
+        });
+      } else {
+        print('No image selected');
+      }
+    } catch (e) {
+      print('Error picking image: $e');
     }
-  } catch (e) {
-    print('Error picking image: $e');
   }
-}
-
+*/
   Future<void> _getLocation() async {
     final locationData = await _location.getLocation();
     setState(() {
@@ -671,7 +672,7 @@ class _RegisterPageState extends State<RegisterPage> {
       longitude = locationData.longitude!;
     });
   }
-/*
+
   Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -709,7 +710,7 @@ class _RegisterPageState extends State<RegisterPage> {
           }
 
           await _database.child(userTypePath).child(user.uid).set(userData);
-
+          /*
           if (_imageFile != null) {
             Reference storageReference = FirebaseStorage.instance
                 .ref()
@@ -723,7 +724,7 @@ class _RegisterPageState extends State<RegisterPage> {
               'profileImageUrl': downloadUrl,
             });
           }
-
+        */
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => userType == 'Doctor'
@@ -761,5 +762,4 @@ class _RegisterPageState extends State<RegisterPage> {
       },
     );
   }
-  */
 }
