@@ -48,15 +48,15 @@ class _DoctorListPageState extends State<DoctorListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _isLoading
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 30.0,
                   ),
                   Text(
@@ -66,7 +66,7 @@ class _DoctorListPageState extends State<DoctorListPage> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   Text(
@@ -77,7 +77,7 @@ class _DoctorListPageState extends State<DoctorListPage> {
                       color: Colors.grey.shade600,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16.0,
                   ),
                   Row(
@@ -89,7 +89,7 @@ class _DoctorListPageState extends State<DoctorListPage> {
                           context, 'Dentist', 'assets/images/dental.png'),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
                   Row(
@@ -102,7 +102,7 @@ class _DoctorListPageState extends State<DoctorListPage> {
                           isHighlighed: true),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   Row(
@@ -121,7 +121,7 @@ class _DoctorListPageState extends State<DoctorListPage> {
                         style: GoogleFonts.poppins(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: Color(0xff006AFA),
+                          color: const Color(0xff006AFA),
                         ),
                       ),
                     ],
@@ -156,19 +156,19 @@ Widget _buildCategoryCard(BuildContext context, String title, dynamic icon,
   return Container(
     width: MediaQuery.of(context).size.width * 0.4,
     decoration: BoxDecoration(
-        color: isHighlighed ? Color(0xff006AFA) : Color(0xffF0EFFF),
+        color: isHighlighed ? const Color(0xff006AFA) : const Color(0xffF0EFFF),
         borderRadius: BorderRadius.circular(15),
         border: isHighlighed
             ? null
-            : Border.all(color: Color(0xffC8C4FF), width: 2)),
+            : Border.all(color: const Color(0xffC8C4FF), width: 2)),
     child: Card(
-      color: isHighlighed ? Color(0xff006AFA) : Color(0xffF0EFFF),
+      color: isHighlighed ? const Color(0xff006AFA) : const Color(0xffF0EFFF),
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 20),
+        padding: const EdgeInsets.symmetric(vertical: 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -176,7 +176,7 @@ Widget _buildCategoryCard(BuildContext context, String title, dynamic icon,
               Icon(
                 icon,
                 size: 40,
-                color: isHighlighed ? Colors.white : Color(0xffF0EFFF),
+                color: isHighlighed ? Colors.white : const Color(0xffF0EFFF),
               )
             else
               Image.asset(
@@ -184,14 +184,14 @@ Widget _buildCategoryCard(BuildContext context, String title, dynamic icon,
                 width: 40,
                 height: 40,
               ),
-            SizedBox(
+            const SizedBox(
               height: 16,
             ),
             Text(
               title,
               style: GoogleFonts.poppins(
                 fontSize: 15,
-                color: isHighlighed ? Colors.white : Color(0xff006AFA),
+                color: isHighlighed ? Colors.white : const Color(0xff006AFA),
               ),
             )
           ],
