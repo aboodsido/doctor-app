@@ -54,15 +54,54 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Center(
-        child: CircularProgressIndicator(),
+      body: Container(
+        color: const Color.fromARGB(220, 0, 71, 250),
+        child: const Padding(
+          padding: EdgeInsets.only(left: 30),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 100),
+              Text(
+                "Welcome!",
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                "Transforming Healthcare",
+                style: TextStyle(
+                  fontSize: 40,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 30),
+              Icon(
+                Icons.healing,
+                color: Colors.white,
+                size: 100,
+              ),
+              SizedBox(height: 50),
+              Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 10,
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
 
   void _navigateToLogin() {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const LoginPage()));
+        .push(MaterialPageRoute(builder: (context) => LoginPage()));
   }
 
   void _navigateToDoctorHomePage() {
