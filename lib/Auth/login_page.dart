@@ -1,5 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
+import '../Doctor/doctor_home_page.dart';
+import '../Patient/patient_home_page.dart';
 import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -10,97 +15,288 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final DatabaseReference _database = FirebaseDatabase.instance.ref();
 
-  final TextEditingController emailController = TextEditingController();
-
-  final TextEditingController passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  String email = '';
+  String password = '';
+  bool _isLoading = false;
+  bool _isNavigation = false;
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  hintText: 'Enter your email',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.email),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        body: _isLoading
+            ? const CircularProgressIndicator()
+            : Form(
+                key: _formKey,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SingleChildScrollView(
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            height: 48,
+                          ),
+                          // Image.asset('assets/images/plus.png'),
+                          // const SizedBox(
+                          //   height: 10,
+                          // ),
+                          Text(
+                            'Welcome!',
+                            style: GoogleFonts.poppins(
+                                fontSize: 32, fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            'Login first',
+                            style: GoogleFonts.poppins(
+                                fontSize: 24, fontWeight: FontWeight.w400),
+                          ),
+                          const SizedBox(
+                            height: 60,
+                          ),
+                          SizedBox(
+                            height: 44,
+                            child: TextFormField(
+                              style: GoogleFonts.poppins(
+                                  fontSize: 13, fontWeight: FontWeight.w500),
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: const Color(0xffF0EFFF),
+                                contentPadding:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                labelText: 'Email',
+                                labelStyle: GoogleFonts.poppins(
+                                    fontSize: 13, color: Colors.grey.shade400),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      10.0), // Rounded corners
+                                  borderSide: const BorderSide(
+                                    color:
+                                        Color(0xff0064FA), // Blue border color
+                                    width: 1.0, // Border width
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: const BorderSide(
+                                    color: Color(
+                                        0xff0064FA), // Blue border color when focused
+                                    width: 1.0, // Border width
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: const BorderSide(
+                                    color: Color(
+                                        0xff0064FA), // Blue border color when not focused
+                                    width: 1.0, // Border width
+                                  ),
+                                ),
+                              ),
+                              keyboardType: TextInputType.emailAddress,
+                              onChanged: (val) => email = val,
+                              validator: (val) =>
+                                  val!.isEmpty ? 'Enter an email' : null,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                            height: 44,
+                            child: TextFormField(
+                              style: GoogleFonts.poppins(
+                                  fontSize: 13, fontWeight: FontWeight.w500),
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: const Color(0xffF0EFFF),
+                                contentPadding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                labelText: 'Password',
+                                labelStyle: GoogleFonts.poppins(
+                                    fontSize: 13, color: Colors.grey.shade400),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xff0064FA),
+                                    width: 1.0,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xff0064FA),
+                                    width: 1.0,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xff0064FA),
+                                    width: 1.0,
+                                  ),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _obscureText
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                    color: Colors.grey.shade400,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _obscureText = !_obscureText;
+                                    });
+                                  },
+                                ),
+                              ),
+                              obscureText: _obscureText,
+                              keyboardType: TextInputType.text,
+                              onChanged: (val) => password = val,
+                              validator: (val) => val!.length < 6
+                                  ? 'Password must be at least 6 characters'
+                                  : null,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: ElevatedButton(
+                              onPressed: _login,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(
+                                    0xff0064FA), // Blue background color
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      10.0), // Rounded corners
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 24,
+                                    vertical:
+                                        12), // Optional: Padding inside the button
+                              ),
+                              child: Text(
+                                'Login',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 17,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.4), // Text color
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        const RegisterPage()));
+                              },
+                              child: Text(
+                                'Don’t have an account? Register',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 15, fontWeight: FontWeight.w400),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                    return 'Please enter a valid email address';
-                  }
-                  return null;
-                },
               ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  hintText: 'Enter your password',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock),
-                ),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  if (value.length < 6) {
-                    return 'Password must be at least 6 characters long';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(220, 0, 71, 250),
-                ),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Perform login action
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Logging in...')),
-                    );
-                  }
-                },
-                child: const Text(
-                  'Login',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const RegisterPage()),
-                  );
-                },
-                child: const Text(
-                  'Don\'t have an account? Register',
-                  style: TextStyle(color: Color.fromARGB(220, 0, 71, 250)),
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
+  }
+
+  Future<void> _login() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      try {
+        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        User? user = userCredential.user;
+
+        if (user != null) {
+          DatabaseReference userRef =
+              _database.child('Doctors').child(user.uid);
+          DataSnapshot snapshot = await userRef.get();
+
+          if (snapshot.exists) {
+            _navigateToDoctorHome();
+          } else {
+            userRef = _database.child('Patients').child(user.uid);
+            snapshot = await userRef.get();
+            if (snapshot.exists) {
+              _navigateToPatientHome();
+            } else {
+              _showErrorDialog('User not found');
+            }
+          }
+        }
+      } catch (e) {
+        _showErrorDialog(e.toString());
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _navigateToDoctorHome() {
+    if (!_isNavigation) {
+      _isNavigation = true;
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const DoctorHomePage()));
+    }
+  }
+
+  void _navigateToPatientHome() {
+    if (!_isNavigation) {
+      _isNavigation = true;
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const PatientHomePage()));
+    }
   }
 }
