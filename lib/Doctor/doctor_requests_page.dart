@@ -62,13 +62,34 @@ class _DoctorRequestsPageState extends State<DoctorRequestsPage> {
                   itemCount: _bookings.length,
                   itemBuilder: (context, index) {
                     final booking = _bookings[index];
-                    return ListTile(
-                      title: Text(booking.description),
-                      subtitle:
-                          Text('Date: ${booking.date} Time: ${booking.time}'),
-                      trailing: Text(booking.status),
-                      onTap: () =>
-                          _showStatusDialog(booking.id, booking.status),
+                    return Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Card(
+                        child: ListTile(
+                          title: Text(booking.description),
+                          subtitle: Text(
+                              'Date: ${booking.date} Time: ${booking.time}'),
+                          trailing: Container(
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: booking.status == 'Accepted'
+                                  ? Colors.green
+                                  : booking.status == 'Rejected'
+                                      ? Colors.red
+                                      : booking.status == 'Completed'
+                                          ? Colors.blue
+                                          : Colors.grey,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              booking.status,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          onTap: () =>
+                              _showStatusDialog(booking.id, booking.status),
+                        ),
+                      ),
                     );
                   },
                 ),

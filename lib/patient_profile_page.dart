@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'Auth/login_page.dart';
 import 'model/booking_model.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class PatientProfilePage extends StatefulWidget {
+  const PatientProfilePage({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<PatientProfilePage> createState() => _PatientProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _PatientProfilePageState extends State<PatientProfilePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final DatabaseReference _requestDatabase =
       FirebaseDatabase.instance.ref().child('Requests');
@@ -57,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void _logout() async {
     await _auth.signOut();
     Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => LoginPage()),
+        MaterialPageRoute(builder: (context) => const LoginPage()),
         (Route<dynamic> route) => false);
   }
 
@@ -65,13 +65,15 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
-        actions: [IconButton(onPressed: _logout, icon: Icon(Icons.logout))],
+        title: const Text('Profile'),
+        actions: [
+          IconButton(onPressed: _logout, icon: const Icon(Icons.logout))
+        ],
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : _bookings.isEmpty
-              ? Center(child: Text('No booking available'))
+              ? const Center(child: Text('No booking available'))
               : ListView.builder(
                   itemCount: _bookings.length,
                   itemBuilder: (context, index) {
@@ -80,7 +82,23 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: Text(booking.description),
                       subtitle:
                           Text('Date: ${booking.date} Time: ${booking.time}'),
-                      trailing: Text(booking.status),
+                      trailing: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: booking.status == 'Accepted'
+                              ? Colors.green
+                              : booking.status == 'Rejected'
+                                  ? Colors.red
+                                  : booking.status == 'Completed'
+                                      ? Colors.blue
+                                      : Colors.grey,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          booking.status,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
                     );
                   },
                 ),
