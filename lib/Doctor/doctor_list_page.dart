@@ -118,12 +118,18 @@ class _DoctorListPageState extends State<DoctorListPage> {
                           color: Colors.grey.shade600,
                         ),
                       ),
-                      Text(
-                        'VIEW ALL',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xff006AFA),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const AllDoctorsPage()));
+                        },
+                        child: Text(
+                          'VIEW ALL',
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xff006AFA),
+                          ),
                         ),
                       ),
                     ],

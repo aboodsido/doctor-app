@@ -31,6 +31,39 @@ class Doctor {
     required this.totalReviews,
   });
 
+  Doctor copyWith({
+    String? firstName,
+    String? lastName,
+    String? category,
+    String? city,
+    String? email,
+    String? profileImageUrl,
+    String? qualification,
+    String? phoneNumber,
+    String? yearsOfExperience,
+    double? latitude,
+    double? longitude,
+    int? numberOfReviews,
+    int? totalReviews,
+  }) {
+    return Doctor(
+      uid: this.uid,
+      category: category ?? this.category,
+      city: city ?? this.city,
+      email: email ?? this.email,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
+      qualification: qualification ?? this.qualification,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      yearsOfExperience: yearsOfExperience ?? this.yearsOfExperience,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      numberOfReviews: numberOfReviews ?? this.numberOfReviews,
+      totalReviews: totalReviews ?? this.totalReviews,
+    );
+  }
+
   factory Doctor.fromMap(Map<dynamic, dynamic> map, String uid) {
     return Doctor(
       uid: uid,

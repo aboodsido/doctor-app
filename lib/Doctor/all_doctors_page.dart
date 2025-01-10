@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../model/doctor_model.dart';
 import 'doctor_details_page.dart';
@@ -47,7 +48,10 @@ class _AllDoctorsPageState extends State<AllDoctorsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("All Doctors Page"),
+        title: Text(
+          "All Doctors Page",
+          style: GoogleFonts.poppins(),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
