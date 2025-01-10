@@ -30,17 +30,14 @@ class _FilteredDoctorsPageState extends State<FilteredDoctorsPage> {
   Future<void> _fetchFilteredDoctors() async {
     await _database.once().then((DatabaseEvent event) {
       DataSnapshot snapshot = event.snapshot;
-      print('Snapshot Value: ${snapshot.value}');
       List<Doctor> tmpDoctors = [];
       if (snapshot.value != null) {
         Map<dynamic, dynamic> values = snapshot.value as Map<dynamic, dynamic>;
         values.forEach((key, value) {
-          print('Doctor: $value');
           Doctor doctor = Doctor.fromMap(value, key);
 
           if (doctor.category.toLowerCase().trim() ==
               widget.category.toLowerCase().trim()) {
-            print('Matched Doctor: ${doctor.firstName} - ${doctor.category}');
             tmpDoctors.add(doctor);
           }
         });

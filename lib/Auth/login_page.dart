@@ -33,7 +33,11 @@ class _LoginPageState extends State<LoginPage> {
       },
       child: Scaffold(
         body: _isLoading
-            ? const CircularProgressIndicator()
+            ? const Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: Color(0xff0064FA),
+                ),
+              )
             : Form(
                 key: _formKey,
                 child: Padding(
@@ -47,10 +51,6 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(
                             height: 48,
                           ),
-                          // Image.asset('assets/images/plus.png'),
-                          // const SizedBox(
-                          //   height: 10,
-                          // ),
                           Text(
                             'Welcome!',
                             style: GoogleFonts.poppins(

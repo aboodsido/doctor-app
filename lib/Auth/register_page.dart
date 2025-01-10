@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 
 import '../doctor/doctor_home_page.dart';
@@ -34,9 +33,6 @@ class _RegisterPageState extends State<RegisterPage> {
   double latitude = 0.0;
   double longitude = 0.0;
 
-  final ImagePicker _picker = ImagePicker();
-  XFile? _imageFile;
-
   final Location _location = Location();
   bool _isLoading = false;
   bool _obscureText = true;
@@ -51,7 +47,9 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(
+              child:
+                  CircularProgressIndicator(backgroundColor: Color(0xff0064FA)))
           : Form(
               key: _formKey,
               child: SingleChildScrollView(
@@ -59,35 +57,6 @@ class _RegisterPageState extends State<RegisterPage> {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      /*
-                      GestureDetector(
-                        onTap: _pickImage, // Trigger image picker when tapped
-                        child: ClipRRect(
-                          borderRadius:
-                              BorderRadius.circular(100), // Make it a circle
-                          child: _imageFile != null
-                              ? Image.file(
-                                  File(_imageFile!.path),
-                                  width: 100, // Adjust size as needed
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                )
-                              : Container(
-                                  color: const Color(
-                                      0xffF0EFFF), // Background color for the placeholder
-                                  width: 100, // Adjust size as needed
-                                  height: 100,
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.add_a_photo,
-                                      color: Colors.grey.shade600,
-                                      size: 30, // Adjust size as needed
-                                    ),
-                                  ),
-                                ),
-                        ),
-                      ),
-                    */
                       SizedBox(
                         width: double.infinity,
                         child: Column(
@@ -649,22 +618,6 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-/*
-  Future<void> _pickImage() async {
-    try {
-      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-      if (pickedFile != null) {
-        setState(() {
-          _imageFile = pickedFile;
-        });
-      } else {
-        print('No image selected');
-      }
-    } catch (e) {
-      print('Error picking image: $e');
-    }
-  }
-*/
   Future<void> _getLocation() async {
     final locationData = await _location.getLocation();
     setState(() {
@@ -710,21 +663,7 @@ class _RegisterPageState extends State<RegisterPage> {
           }
 
           await _database.child(userTypePath).child(user.uid).set(userData);
-          /*
-          if (_imageFile != null) {
-            Reference storageReference = FirebaseStorage.instance
-                .ref()
-                .child('$userTypePath/${user.uid}/profile.jpg');
-            UploadTask uploadTask =
-                storageReference.putFile(File(_imageFile!.path));
-            TaskSnapshot taskSnapshot = await uploadTask;
 
-            String downloadUrl = await taskSnapshot.ref.getDownloadURL();
-            await _database.child(userTypePath).child(user.uid).update({
-              'profileImageUrl': downloadUrl,
-            });
-          }
-        */
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => userType == 'Doctor'
